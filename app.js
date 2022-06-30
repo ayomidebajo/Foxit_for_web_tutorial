@@ -64,38 +64,43 @@ document.getElementById("file").onchange = function (e) {
     }
   }
   let file = undefined;
-  // function loadFileAndDownload(pdfDoc) {
-  //   let bufferArray = [];
-  //   return pdfDoc
-  //     .getStream(function ({ arrayBuffer, offset, size }) {
-  //       bufferArray.push(arrayBuffer);
-  //     })
-  //     .then(function (size) {
-  //       console.log("The total size of the stream", bufferArray);
-  //       file = new Blob([JSON.stringify(bufferArray)], {
-  //         type: "application/pdf",
-  //       });
-  //       return new Blob(bufferArray, { type: "application/pdf" });
-  //     });
-  // }
+  function loadFileAndDownload(pdfDoc) {
+    let bufferArray = [];
+    return pdfDoc
+      .getStream(function ({ arrayBuffer, offset, size }) {
+        bufferArray.push(arrayBuffer);
+      })
+      .then(function (size) {
+        console.log("The total size of the stream", bufferArray);
+        file = new Blob([JSON.stringify(bufferArray)], {
+          type: "application/pdf",
+        });
+        return new Blob(bufferArray, { type: "application/pdf" });
+      });
+  }
 
   // The pdfViewer method (openPDFByFile) returns a type of PDFDoc, this is how you can use the getStream() method.
   let file_uploaded = pdfViewer.openPDFByFile(pdf, {
     password: "",
     fdf: { file: fdf },
   });
-  // file_uploaded.then((res) => {
-  //   loadFileAndDownload(res);
-  // });
+  file_uploaded.then((res) => {
+    loadFileAndDownload(res);
+  });
 
   document.getElementById("form").onsubmit = async function (e) {
     e.preventDefault();
+        const body = new FormData(document.getElementById("form"));
     file_uploaded.then((res) => {
-      console.log(res, "dance");
+      loadFileAndDownload(res).then(res => {
+        console.log(res, 'dance');
+             body.append("file", res);
+      });
+     
     });
 
-    const body = new FormData(document.getElementById("form"));
-    body.append("file", pdf);
+
+
     // console.log(formData.get("file"), "ried");
     // let file = undefined;
 
