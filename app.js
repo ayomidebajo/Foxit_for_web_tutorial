@@ -44,7 +44,7 @@ const pdfViewer = new PDFViewer({
 // new PDFViewCtrl_EditGraphicsAddonModule.EditGraphicsAddon(pdfViewer).init();
 // new PDFViewCtrl_CreateAnnotAddonModule.CreateAnnotAddon(pdfViewer).init();
 pdfViewer.init("#pdf-viewer");
-
+let fileName = undefined;
 // console.log(pdf, "goose bumps");
 document.getElementById("file").onchange = function (e) {
   if (!e.target.value) {
@@ -55,6 +55,7 @@ document.getElementById("file").onchange = function (e) {
   for (let i = e.target.files.length; i--; ) {
     let file = e.target.files[i];
     let filename = file.name;
+    fileName = file.name;
     if (/\.pdf$/i.test(filename)) {
       pdf = file;
       console.log(pdf, "po");
@@ -102,12 +103,59 @@ document.getElementById("file").onchange = function (e) {
     await fetch("http://localhost:3000/upload", {
       method: "POST",
       body: body,
-    });
-
-    alert("The file has been uploaded successfully.");
+    })
+      .then(() => {
+        alert("The file has been uploaded successfully.");
+      })
+      .catch((err) => {
+        alert("Oh no, something went wrong!");
+      });
   };
+
+  // // logic to download file when the user presses the download button
+  // document.getElementById("download-btn").onclick = async function (e) {
+  //   e.preventDefault();
+  //   console.log("clicked");
+  //   await fetch("http://localhost:3000/upload", {
+  //     method: "GET",
+  //   })
+  //     .then((res) => {
+  //       console.log(res, "she like me");
+  //     })
+  //     .catch((err) => {
+  //       alert("Oh no, something went wrong");
+  //     });
+  // };
+  const file_name = new FormData(document.getElementById("form"));
+  file_name.append("fileName", "testfile");
+
+  document
+    .getElementById("download-btn")
+    .addEventListener("click", async function (e) {
+      e.preventDefault();
+      console.log("clicked");
+      await fetch(`http://localhost:3000/download?filename=${fileName}`, {
+        method: "GET",
+      })
+        .then((res) => {
+          res.json().then((res) => {
+           downloadURI(res.data, fileName);
+          })
+        })
+        .catch((err) => {
+          alert("Oh no, something went wrong");
+        });
+    });
 };
 
+function downloadURI(uri, name) {
+  var link = document.createElement("a");
+  link.download = name;
+  link.href = uri;
+  window.open(uri, "_blank");
+}
+
+console.log(document.getElementById("download-btn"), "gentitlyu");
 // Zoom in and Zoom out
 let scale = 1;
 document.getElementById("plus").onclick = function () {

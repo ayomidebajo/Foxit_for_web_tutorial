@@ -32,18 +32,30 @@ const upload = multer({
       cb(null, file.originalname);
     },
   }),
-}).any()
+}).any();
 // }).array("file", 1);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+let corsOptions = {
+  origin: [
+    "https://web-uploads.nyc3.digitaloceanspaces.com/",
+    "http://localhost:8080/",
+  ],
+};
 
-app.get("/upload", function (req, res) {
-  var fileName = req.body.fileName;
+app.get("/download", cors(corsOptions), function (req, res) {
+  var fileName = req.query.filename;
+  console.log(req.body, 'li');
   var directory =
-    "https://fileRepo.ams3.digitaloceanspaces.com/" + fileName + ".pdf";
-  res.send({ dir: directory });
+    "https://web-uploads.nyc3.digitaloceanspaces.com/" + fileName;
+  
+  
+  console.log(directory, 'yey');
+  res.json({
+    data: directory
+  })
 });
 
 app.post("/upload", function (request, response, next) {
