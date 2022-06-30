@@ -124,8 +124,10 @@
                 </header>
                 <p>Files Supported: PDF, TEXT, DOC , DOCX</p>
                 <!-- <input type="file" hidden accept=".doc,.docx,.pdf" id="fileID" style="display:none;"> -->
-                <input type="file" name="file" id="file" class="btn-input" accept=".pdf,.fdf,.xfdf" multiple="multiple">
-                <button class="btn">Submit</button>
+                <form method="post" enctype="multipart/form-data" id="form">
+                    <input type="file" name="file" id="file" class="btn-input" accept=".pdf,.fdf,.xfdf" multiple="multiple">
+                    <button class="btn">Submit</button>
+                </form>
             </div>
 
         </div>

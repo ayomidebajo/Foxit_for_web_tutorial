@@ -58,32 +58,74 @@ document.getElementById("file").onchange = function (e) {
     let filename = file.name;
     if (/\.pdf$/i.test(filename)) {
       pdf = file;
-      //   console.log(pdf, "po");
+      console.log(pdf, "po");
     } else if (/\.(x)?fdf$/i.test(filename)) {
       fdf = file;
     }
   }
-
-  function loadFileAndDownload(pdfDoc) {
-    let bufferArray = [];
-    return pdfDoc
-      .getStream(function ({ arrayBuffer, offset, size }) {
-        bufferArray.push(arrayBuffer);
-      })
-      .then(function (size) {
-        console.log("The total size of the stream", size);
-        return new Blob(bufferArray, { type: "application/pdf" });
-      });
-  }
+  let file = undefined;
+  // function loadFileAndDownload(pdfDoc) {
+  //   let bufferArray = [];
+  //   return pdfDoc
+  //     .getStream(function ({ arrayBuffer, offset, size }) {
+  //       bufferArray.push(arrayBuffer);
+  //     })
+  //     .then(function (size) {
+  //       console.log("The total size of the stream", bufferArray);
+  //       file = new Blob([JSON.stringify(bufferArray)], {
+  //         type: "application/pdf",
+  //       });
+  //       return new Blob(bufferArray, { type: "application/pdf" });
+  //     });
+  // }
 
   // The pdfViewer method (openPDFByFile) returns a type of PDFDoc, this is how you can use the getStream() method.
   let file_uploaded = pdfViewer.openPDFByFile(pdf, {
     password: "",
     fdf: { file: fdf },
   });
-  file_uploaded.then((res) => {
-    loadFileAndDownload(res);
-  });
+  // file_uploaded.then((res) => {
+  //   loadFileAndDownload(res);
+  // });
+
+  document.getElementById("form").onsubmit = async function (e) {
+    e.preventDefault();
+    file_uploaded.then((res) => {
+      console.log(res, "dance");
+    });
+
+    const body = new FormData(document.getElementById("form"));
+    body.append("file", pdf);
+    // console.log(formData.get("file"), "ried");
+    // let file = undefined;
+
+    // file = res;
+
+    // console.log(pdf, "smk");
+    await fetch("http://localhost:3000/upload", {
+      method: "POST",
+      // headers: { "Content-Type": "multipart/form-data" },
+      body: body,
+    });
+
+    // alert("The file has been uploaded successfully.");
+
+    // let http = new XMLHttpRequest();
+    // let url = "http://localhost:3000/upload";
+    // // let params = "orem=ipsum&name=binny";
+    // http.open("POST", url, true);
+
+    // //Send the proper header information along with the request
+    // http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    // http.onreadystatechange = function () {
+    //   //Call a function when the state changes.
+    //   if (http.readyState == 4 && http.status == 200) {
+    //     alert(http.responseText);
+    //   }
+    // };
+    // http.send(formData);
+  };
 };
 
 // Zoom in and Zoom out
