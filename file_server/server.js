@@ -39,6 +39,13 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+app.get("/upload", function (req, res) {
+  var fileName = req.body.fileName;
+  var directory =
+    "https://fileRepo.ams3.digitaloceanspaces.com/" + fileName + ".pdf";
+  res.send({ dir: directory });
+});
+
 app.post("/upload", function (request, response, next) {
   upload(request, response, function (error) {
     if (error) {

@@ -1,6 +1,5 @@
 const pdf = PDFViewCtrl;
 const PDFViewer = PDFViewCtrl.PDFViewer;
-// const PDFdoc = pdf.PDF;
 const PDFUi = UIExtension;
 
 const pdfViewer = new PDFViewer({
@@ -88,48 +87,24 @@ document.getElementById("file").onchange = function (e) {
     loadFileAndDownload(res);
   });
 
+  // logic to submit when user presses submit or enter
   document.getElementById("form").onsubmit = async function (e) {
     e.preventDefault();
-        const body = new FormData(document.getElementById("form"));
+    const body = new FormData(document.getElementById("form"));
     file_uploaded.then((res) => {
-      loadFileAndDownload(res).then(res => {
-        console.log(res, 'dance');
-             body.append("file", res);
+      loadFileAndDownload(res).then((res) => {
+        console.log(res, "dance");
+        body.append("file", res);
       });
-     
     });
 
-
-
-    // console.log(formData.get("file"), "ried");
-    // let file = undefined;
-
-    // file = res;
-
-    // console.log(pdf, "smk");
+    // request to send file
     await fetch("http://localhost:3000/upload", {
       method: "POST",
-      // headers: { "Content-Type": "multipart/form-data" },
       body: body,
     });
 
-    // alert("The file has been uploaded successfully.");
-
-    // let http = new XMLHttpRequest();
-    // let url = "http://localhost:3000/upload";
-    // // let params = "orem=ipsum&name=binny";
-    // http.open("POST", url, true);
-
-    // //Send the proper header information along with the request
-    // http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-    // http.onreadystatechange = function () {
-    //   //Call a function when the state changes.
-    //   if (http.readyState == 4 && http.status == 200) {
-    //     alert(http.responseText);
-    //   }
-    // };
-    // http.send(formData);
+    alert("The file has been uploaded successfully.");
   };
 };
 
