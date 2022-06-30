@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Foxit PDF SDK For Web</title>
+    <link rel="shortcut icon" href="../../assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../../../lib/PDFViewCtrl.css" />
+</head>
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+    }
+
+    .container {
+        height: 100%;
+        width: 100%;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        background-color: #fcfcfc;
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+        width: 600px;
+        height: 360px;
+        background-color: #ffffff;
+        padding: 10px 30px 40px;
+        margin-top: 20px;
+    }
+
+    .card h3 {
+        font-size: 22px;
+        font-weight: 600;
+
+    }
+
+    .drop_box {
+        margin: 10px 0;
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border: 3px dotted #a3a3a3;
+        border-radius: 5px;
+    }
+
+    .drop_box h4 {
+        font-size: 16px;
+        font-weight: 400;
+        color: #2e2e2e;
+    }
+
+    .drop_box p {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        font-size: 12px;
+        color: #a3a3a3;
+    }
+
+    .btn {
+        text-decoration: none;
+        background-color: #005af0;
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none;
+        outline: none;
+        transition: 0.3s;
+    }
+
+    .btn-input {
+        text-decoration: none;
+        background-color: #fff;
+        color: #000;
+        border: 1px solid #005af0;
+        padding: 10px 20px;
+        outline: none;
+        transition: 0.3s;
+        margin-bottom: 20px;
+    }
+
+    .btn-input:hover {
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        text-decoration: none;
+        background-color: #ffffff;
+        color: #005af0;
+        padding: 10px 20px;
+        border: none;
+        outline: 1px solid #010101;
+        cursor: pointer;
+    }
+
+    .form input {
+        margin: 10px 0;
+        width: 100%;
+        background-color: #e2e2e2;
+        border: none;
+        outline: none;
+        padding: 12px 20px;
+        border-radius: 4px;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h3>Upload Files</h3>
+            <div class="drop_box">
+                <header>
+                    <h4>Select File here</h4>
+                </header>
+                <p>Files Supported: PDF, TEXT, DOC , DOCX</p>
+                <!-- <input type="file" hidden accept=".doc,.docx,.pdf" id="fileID" style="display:none;"> -->
+                <input type="file" name="file" id="file" class="btn-input" accept=".pdf,.fdf,.xfdf" multiple="multiple">
+                <button class="btn">Submit</button>
+            </div>
+
+        </div>
+    </div>
+    <!-- <input type="file" name="file" id="file" class="file-upload-field" accept=".pdf,.fdf,.xfdf" multiple="multiple"> -->
+    <button type="button" class="btn" id="plus">Zoom In</button>
+    <button type="button" class="btn" id="sub">Zoom Out</button>
+    <!-- <p>taone amissed</p> -->
+    <hr>
+    <div style="width: 100%; height: 500px; overflow: auto;">
+        <div id="pdf-viewer"></div>
+    </div>
+
+    <script src="license-key.js"></script>
+    <script src="/lib/UIExtension.full.js"></script>
+    <script src="/lib/PDFViewCtrl.full.js"></script>
+    <script src="/lib/PDFViewCtrl/addon/EditGraphicsAddonModule.js"></script>
+    <script src="/lib/PDFViewCtrl/addon/CreateAnnotAddonModule.js"></script>
+    <script src="/lib/PDFViewCtrl/addon/HContinuousViewMode.js"></script>
+    <script src="/lib/PDFViewCtrl/addon/FacingContinuousViewMode.js"></script>
+    <script src="/lib/PDFViewCtrl/addon/FacingPageViewMode.js"></script>
+<script>
+
+
+//         var PDFViewer = PDFViewCtrl.PDFViewer;
+//         var PDFDoc = UIExtension;
+//         var pdfViewer = new PDFViewer({
+//             libPath: '../../../lib',
+//             jr: {
+//                 licenseSN: licenseSN,
+//                 licenseKey: licenseKey,
+//                 tileSize: 300,
+//             },
+//             customs: {
+//                 closeDocBefore: function () {
+//                     return confirm('Close the current document?');
+//                 },
+//                 PageCustomRender: (function () {
+//                     function CustomPageCustomRender(eCustom, pdfPageRender) {
+//                         this.eCustom = eCustom;
+//                         this.pdfPageRender = pdfPageRender;
+//                     }
+//                     CustomPageCustomRender.prototype.render = function () {
+//                         var self = this;
+//                         return self.pdfPageRender.getPDFPage().then(function (page) {
+//                             if (page.getIndex() > 3) {
+//                                 self.eCustom.innerHTML = 'You are not authorized to view this page.';
+//                                 return false;
+//                             }
+//                         })
+//                     }
+//                     CustomPageCustomRender.prototype.destroy = function () {
+//                         this.eCustom.innerHTML = '';
+//                     };
+//                     return CustomPageCustomRender;
+//                 })(),
+//                 ScrollWrap: PDFViewCtrl.CustomScrollWrap
+//             }
+//         });
+//         (new PDFViewCtrl_EditGraphicsAddonModule.EditGraphicsAddon(pdfViewer)).init();
+//         (new PDFViewCtrl_CreateAnnotAddonModule.CreateAnnotAddon(pdfViewer)).init();
+//         pdfViewer.init('#pdf-viewer');
+       
+// console.log(pdfViewer, "goose bumps")
+//         document.getElementById('file').onchange = function (e) {
+//             if (!e.target.value) {
+//                 return;
+//             }
+//             console.log(e.target.files, 'val');
+//             var pdf, fdf;
+//             for (var i = e.target.files.length; i--;) {
+//                 var file = e.target.files[i];
+//                 var filename = file.name;
+//                 if (/\.pdf$/i.test(filename)) {
+//                     pdf = file
+//                     console.log(pdf, 'po');
+//                 } else if (/\.(x)?fdf$/i.test(filename)) {
+//                     fdf = file
+//                 }
+//             }
+//             pdfViewer.openPDFByFile(pdf, { password: '', fdf: { file: fdf } });
+//             this.value = '';
+//         };
+//         var scale = 1;
+//         document.getElementById('plus').onclick = function () {
+//             scale += 0.25;
+//             pdfViewer.zoomTo(scale).catch(function () { });
+//         };
+//         document.getElementById('sub').onclick = function () {
+//             scale -= 0.25;
+//             pdfViewer.zoomTo(scale).catch(function () { });
+//         };
+
+//         function _inherits(subClass, superClass) {
+//             if (typeof superClass !== "function" && superClass !== null) {
+//                 throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+//             }
+//             subClass.prototype = Object.create(superClass && superClass.prototype, {
+//                 constructor: {
+//                     value: subClass,
+//                     enumerable: false,
+//                     writable: true,
+//                     configurable: true
+//                 }
+//             });
+//             if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+//         }
+//         function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+//         function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+    </script>
+
+    <script src="./app.js"></script> 
+</body>
+
+</html>
