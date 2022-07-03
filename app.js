@@ -7,7 +7,6 @@ const pdfViewer = new PDFViewer({
   jr: {
     licenseSN: licenseSN,
     licenseKey: licenseKey,
-    tileSize: 300,
   },
   customs: {
     //   Custom function to confirm the removal of document.
@@ -41,16 +40,15 @@ const pdfViewer = new PDFViewer({
   },
 });
 
-// new PDFViewCtrl_EditGraphicsAddonModule.EditGraphicsAddon(pdfViewer).init();
-// new PDFViewCtrl_CreateAnnotAddonModule.CreateAnnotAddon(pdfViewer).init();
+// init the pdf host
 pdfViewer.init("#pdf-viewer");
+
 let fileName = undefined;
-// console.log(pdf, "goose bumps");
 document.getElementById("file").onchange = function (e) {
   if (!e.target.value) {
     return;
   }
-  //   console.log(e.target.files, "val");
+
   let pdf, fdf;
   for (let i = e.target.files.length; i--; ) {
     let file = e.target.files[i];
@@ -63,6 +61,8 @@ document.getElementById("file").onchange = function (e) {
       fdf = file;
     }
   }
+
+  // send file functionality
   let file = undefined;
   function loadFileAndDownload(pdfDoc) {
     let bufferArray = [];
@@ -71,7 +71,6 @@ document.getElementById("file").onchange = function (e) {
         bufferArray.push(arrayBuffer);
       })
       .then(function (size) {
-        console.log("The total size of the stream", bufferArray);
         file = new Blob([JSON.stringify(bufferArray)], {
           type: "application/pdf",
         });
@@ -111,43 +110,27 @@ document.getElementById("file").onchange = function (e) {
         alert("Oh no, something went wrong!");
       });
   };
-
-  // // logic to download file when the user presses the download button
-  // document.getElementById("download-btn").onclick = async function (e) {
-  //   e.preventDefault();
-  //   console.log("clicked");
-  //   await fetch("http://localhost:3000/upload", {
-  //     method: "GET",
-  //   })
-  //     .then((res) => {
-  //       console.log(res, "she like me");
-  //     })
-  //     .catch((err) => {
-  //       alert("Oh no, something went wrong");
-  //     });
-  // };
-  const file_name = new FormData(document.getElementById("form"));
-  file_name.append("fileName", "testfile");
-
-  document
-    .getElementById("download-btn")
-    .addEventListener("click", async function (e) {
-      e.preventDefault();
-      console.log("clicked");
-      await fetch(`http://localhost:3000/download?filename=${fileName}`, {
-        method: "GET",
-      })
-        .then((res) => {
-          res.json().then((res) => {
-           downloadURI(res.data, fileName);
-          })
-        })
-        .catch((err) => {
-          alert("Oh no, something went wrong");
-        });
-    });
 };
 
+document
+  .getElementById("download-btn")
+  .addEventListener("click", async function (e) {
+    e.preventDefault();
+    console.log("clicked");
+    await fetch(`http://localhost:3000/download?filename=${fileName}`, {
+      method: "GET",
+    })
+      .then((res) => {
+        res.json().then((res) => {
+          downloadURI(res.data, fileName);
+        });
+      })
+      .catch((err) => {
+        alert("Oh no, something went wrong");
+      });
+  });
+
+// Logic to download file
 function downloadURI(uri, name) {
   var link = document.createElement("a");
   link.download = name;
@@ -155,7 +138,6 @@ function downloadURI(uri, name) {
   window.open(uri, "_blank");
 }
 
-console.log(document.getElementById("download-btn"), "gentitlyu");
 // Zoom in and Zoom out
 let scale = 1;
 document.getElementById("plus").onclick = function () {
@@ -166,40 +148,3 @@ document.getElementById("sub").onclick = function () {
   scale -= 0.25;
   pdfViewer.zoomTo(scale).catch(function () {});
 };
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError(
-      "Super expression must either be null or a function, not " +
-        typeof superClass
-    );
-  }
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      enumerable: false,
-      writable: true,
-      configurable: true,
-    },
-  });
-  if (superClass)
-    Object.setPrototypeOf
-      ? Object.setPrototypeOf(subClass, superClass)
-      : (subClass.__proto__ = superClass);
-}
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-
-function _possibleConstructorReturn(self, call) {
-  if (!self) {
-    throw new ReferenceError(
-      "this hasn't been initialised - super() hasn't been called"
-    );
-  }
-  return call && (typeof call === "object" || typeof call === "function")
-    ? call
-    : self;
-}

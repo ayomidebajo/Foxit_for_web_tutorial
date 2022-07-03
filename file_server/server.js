@@ -38,6 +38,8 @@ const upload = multer({
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+
 let corsOptions = {
   origin: [
     "https://web-uploads.nyc3.digitaloceanspaces.com/",
