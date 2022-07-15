@@ -6,5 +6,3 @@ They are large files, so It was best to add them to the .gitignore file.
 In the project directory you can run `npm install`, this will install all dependencies.
 
 You can also `cd` into `file_server` to use the logic for your backend server, make sure you replace your the fields with your secret fields in your .env file. You can also run `npm install` in this directory (`file_server`) this will install dependencies.
-
-Make sure to play around Foxit SDK, It has a lot of hidden powers but you'll have to find them.
