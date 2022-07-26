@@ -9,17 +9,17 @@ const pdfViewer = new PDFViewer({
     licenseKey: licenseKey,
   },
   customs: {
-    //   Custom function to confirm the removal of document.
+    // Custom function to confirm the removal of documents
     closeDocBefore: function () {
       return confirm("Close the current document?");
     },
-    //Custom function to render pages
+    // Custom function to render pages
     PageCustomRender: (function () {
       function CustomPageCustomRender(eCustom, pdfPageRender) {
         this.eCustom = eCustom;
         this.pdfPageRender = pdfPageRender;
       }
-      // Custom function to limit the amount of pages to view.
+      // Custom function to limit the amount of pages to view
       CustomPageCustomRender.prototype.render = function () {
         let self = this;
         return self.pdfPageRender.getPDFPage().then(function (page) {
@@ -30,7 +30,7 @@ const pdfViewer = new PDFViewer({
           }
         });
       };
-      // Custom function to remove the render when ever you change the file in the file input
+      // Custom function to remove the render whenever you change the file in the file input
       CustomPageCustomRender.prototype.destroy = function () {
         this.eCustom.innerHTML = "";
       };
@@ -39,6 +39,7 @@ const pdfViewer = new PDFViewer({
     ScrollWrap: PDFViewCtrl.CustomScrollWrap,
   },
 });
+
 
 // init the pdf host
 pdfViewer.init("#pdf-viewer");
