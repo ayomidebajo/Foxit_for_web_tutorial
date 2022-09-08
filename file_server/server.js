@@ -13,23 +13,40 @@ app.use(
   })
 );
 
-const spacesEndpoint = new aws.Endpoint(process.env.ENDPOINT);
+// const spacesEndpoint = new aws.Endpoint(process.env.ENDPOINT);
 const s3 = new aws.S3({
-  endpoint: spacesEndpoint,
+  // endpoint: spacesEndpoint,
   secretAccessKey: process.env.SECRET,
   accessKeyId: process.env.ACCESS,
+  region: "us-east-2",
 });
+
+
+// Create the bucket
+// const params = {
+//   // your bucket name
+//   Bucket: "testbucketfoxit",
+//   CreateBucketConfiguration: {
+//     // Set your region here
+//     LocationConstraint: "us-east-2",
+//   },
+// };
+
+
 
 // Change bucket property to your Space name
 const upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: "web-uploads",
+    bucket: "testbucketfoxit",
     acl: "public-read",
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: function (request, file, cb) {
       // console.log(file, "dile");
       cb(null, file.originalname);
+    },
+    metadata: function (req, file, cb) {
+      cb(null, { fieldName: "TESTING_METADATA" });
     },
   }),
 }).any();
@@ -39,10 +56,10 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-
+// change the url to your own
 let corsOptions = {
   origin: [
-    "https://web-uploads.nyc3.digitaloceanspaces.com/",
+    "https://testbucketfoxit.s3.us-east-2.amazonaws.com/",
     "http://localhost:8080/",
   ],
 };
@@ -51,7 +68,7 @@ app.get("/download", cors(corsOptions), function (req, res) {
   var fileName = req.query.filename;
   console.log(req.body, 'li');
   var directory =
-    "https://web-uploads.nyc3.digitaloceanspaces.com/" + fileName;
+    "https://testbucketfoxit.s3.us-east-2.amazonaws.com/" + fileName;
   
   
   console.log(directory, 'yey');
